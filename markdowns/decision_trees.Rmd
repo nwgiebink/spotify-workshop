@@ -39,48 +39,9 @@ spot <- read.csv("spot_clean.csv")
 
 **Step 4**: Compare performance of decision tree in Step 3 to Random Forest
 
-```{r}
-# function: train/test split and build decision tree
-decision_tree = function(labels, df, p = 0.8){
-
-# splitting the data
-split_index <- createDataPartition(labels, p=p, list = F)
-
-train <- df[split_index,]
-test <- df[-split_index, !(colnames(df) %in% c("country"))]
-target <- df[-split_index, "country"]
-
-# build the tree
-tree <- rpartXse(country ~ ., train, se=0.5)
-# plot the tree
-plot <- prp(tree, type = 1, extra = 103, roundint = FALSE)
-
-
-# prediction using the trees
-pred <- predict(tree, test, type = "class")
-
-# confusion matrix 
-cm <- table(pred, target)
-
-# error rate
-error <- (1-sum(diag(cm))/sum(cm))
-error <- cat("error rate (categorical features): ",error)
-
-# have a look at the variable.importance
-variable_importance = tree$variable.importance
-
-output = list(plot, variable_importance, error)
-return(output)
-}
-
-```
-
-
-
-
 # Preprocessing
 
-At first, we are going to make two sets of our spot-data: one only related to the music variables and one also including the  socio- variables. 
+At first, we are going to make two sets of our spot-data: one only related to the music variables and one also including the social variables. 
 
 ```{r}
 # preprocessing the data set 
@@ -102,9 +63,49 @@ spot_music_socio <- spot %>% select(track.popularity, track.explicit, danceabili
 
 
 # Step 1. Decision tree
+
+```{r, include=FALSE}
+# NOTE: function in the works...TO DO - make more generalizable 
+
+# # function: train/test split and build decision tree
+# decision_tree = function(labels, df, p = 0.8){
+# 
+# # splitting the data
+# split_index <- createDataPartition(labels, p=p, list = F)
+# 
+# train <- df[split_index,]
+# test <- df[-split_index, !(colnames(df) %in% c("country"))]
+# target <- df[-split_index, "country"]
+# 
+# # build the tree
+# tree <- rpartXse(country ~ ., train, se=0.5)
+# # plot the tree
+# plot <- prp(tree, type = 1, extra = 103, roundint = FALSE)
+# 
+# 
+# # prediction using the trees
+# pred <- predict(tree, test, type = "class")
+# 
+# # confusion matrix
+# cm <- table(pred, target)
+# 
+# # error rate
+# error <- (1-sum(diag(cm))/sum(cm))
+# error <- cat("error rate (categorical features): ",error)
+# 
+# # have a look at the variable.importance
+# variable_importance = tree$variable.importance
+# 
+# output = list(plot, variable_importance, error)
+# return(output)
+# }
+# 
+```
+
+
 ## Split Train/Test
 
-We split the spot_music_SOCIO data into training and test data, not using a validation set. 
+We split the spot_music_socio data into training and test data, not using a validation set. 
 
 ```{r}
 split_index <- createDataPartition(spot_music_socio$country, p= 0.8, list = F)
@@ -159,9 +160,9 @@ Distribution of discretized levels.
 
 ## Socio-political tree with discretized variables
 
-```{r}
-decision_tree(soc_disc$country, soc_disc, p=0.8)
-```
+# ```{r}
+# decision_tree(soc_disc$country, soc_disc, p=0.8)
+# ```
 
 ```{r}
 # splitting the data
