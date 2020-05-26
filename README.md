@@ -40,7 +40,7 @@ Topics: API, data preparation, model interpretability, feature engineering, clus
 
 ### Resources
 
-1. [Github repo for this lesson](https://github.com/nwgiebink/spotify-workshop). Check back for more updates and improvements! :)
+1. Check back on [this repo](https://github.com/nwgiebink/spotify-workshop) for more updates and improvements! :)
 2. This lesson was partly inspired by [this awesome spotifyr tutorial](https://msmith7161.github.io/what-is-speechiness/). I Highly recommend it for practice acquiring your own data with the Spotify API.
 3. [Spotify Charts](https://spotifycharts.com/regional) is another awesome source for Spotify data that is much easier to use and allows you to specify both location and date for popular tracks (e.g top 200 in UK on 06/03/2017)
 4. [General spotify developer site](https://developer.spotify.com/)
