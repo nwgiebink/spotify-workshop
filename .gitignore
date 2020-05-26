@@ -1,0 +1,19 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# private files
+client_id
+client_secret
+
+# scripts
+scripts/sociopolitical_variables.R
+scripts/preprocessing.R
+scripts/api.R
+
+# sociopolitical data building blocks
+data/
+
+# spot clean bug
+data/spot_clean.csv
