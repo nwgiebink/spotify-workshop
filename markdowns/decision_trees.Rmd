@@ -24,19 +24,18 @@ library(randomForest)
 
 spot <- read.csv("spot_clean.csv")
 
+# reading from url yields identical result. data types change if using read_csv() (tidyverse)
+# test_read <- read.csv(url('https://raw.githubusercontent.com/nwgiebink/spotify-workshop/master/markdowns/spot_clean.csv'))
+
 ```
 
 ### Overview
 
 **Step 1**: build a decision tree to classify countries using social variables. 
 
-**Step 1B**: Interesting rules for distinguishing countries
-
 **Step 2**: use most important variable from Stage 1 to cluster countries (the tree in Step 3 performed better with fewer classes this way)
 
 **Step 3**: build a decision tree to classify clustered countries by music variables (dimensions of music taste)
-
-**Step 3B**: Interesting rules
 
 **Step 4**: Compare performance of decision tree in Step 3 to Random Forest
 
@@ -81,34 +80,6 @@ spot_music_socio_target_test <- spot_music_socio[-split_index, "country"]
 ```
 
 
-```{r}
-# # tree building
-# 
-# ct <- rpartXse(country ~ ., spot_music_socio_train, se=0.5)
-# 
-# # prediction using the trees
-# 
-# pred <- predict(ct, spot_music_socio_features_test, type = "class")
-# 
-# # have a look at the variable.importance
-# ct$variable.importance
-# 
-# # confusion matrix 
-# cm <- table(pred, spot_music_socio_target_test)
-# 
-# # error rate
-# error <- (1-sum(diag(cm))/sum(cm))
-# cat(" error rate: ",error)
-                    
-```
-
-```{r}
-# prp(ct, type = 1, extra = 103, roundint = FALSE)
-
-```
-
-Figure 1. First decision tree: classifying countries by social variables. 
-
 
 ## Why is the error rate 0?
 
@@ -121,7 +92,7 @@ ggplot(spot_music_socio, aes(country, happiness))+
 
 ```
 
-Figure 2. Each country has a single happiness value (boxplot lacks quantiles, etc) spread over each tuple for that country (by virtue of the sociopolitical data source's methods). Therefore, if at least one tuple from each country made it into both the training and test data, this could lead to a perfect error rate.
+Each country has a single happiness value (boxplot lacks quantiles, etc) spread over each tuple for that country (by virtue of the sociopolitical data source's methods). Therefore, if at least one tuple from each country made it into both the training and test data, this could lead to a perfect error rate.
 
 ### Solution: Discretize variables and re-run decision tree
 
@@ -147,7 +118,7 @@ ggplot(soc_long, aes(level))+
 ```
 
 
-Figure 3. Distribution of discretized levels.
+Distribution of discretized levels.
 
 ## Socio-political tree with discretized variables
 ```{r}
@@ -184,15 +155,9 @@ prp(ct2, type = 1, extra = 103, roundint = FALSE)
 
 ```
 
-Figure 4. Classification of countries using discretized social variables. We chose not to prune the tree because it already has impeccable performance on the test data. The error rate is still 0.
+Classification of countries using discretized social variables. We chose not to prune the tree because it already has impeccable performance on the test data. The error rate is still 0.
 
-## Step 1B: interesting rules
 
-1. If freedom != 1,2,3 (1 is highest) and percent urban = 2, then country = China
-
-2. If freedom != 1,2,3 (1 is highest) and percent urban != 2, then country = Russia (note: Russia's percent urban is 74.3 (> level 2))
-
-3. If freedom = 1,2,3 (all but lowest), percent internet users != 1,4 (moderate), happiness != 3,4 (below 50th percentile), and percent urban = 4 (highest), then country = Dominican Republic
 
 # Step 2. Use important variable from tree in Step 1 to cluster countries
 
@@ -282,12 +247,9 @@ tree_age <- prp(ct_age, type = 1, extra = 103, roundint = FALSE)
 
 ```
 
-Figure 6. Classification of young and old countries. 
+Classification of young and old countries. 
 
-## Step 3B: interesting rules
-1. If track popularity >= 70 (scale 0-100) and speechiness >= 0.046 (range 0.02-0.56 in our data), then median age is 'old.' 
-2. If track popularity <70 then median age is 'young.'
-3. IF track popularity >70 and speechiness < 0.046 (extremely low), then median age is 'young.'
+
 
 
 ## Step 4. Compare performance with Random Forest
